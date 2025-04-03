@@ -43,7 +43,7 @@ while is_running:
 
         elif event.type == pygame.MOUSEBUTTONUP:
             if piece_clicked:
-                pos_final_correct = is_mouvement_correct(piece_clicked_pos_initial, event.pos, piece_clicked.type)
+                pos_final_correct = is_mouvement_correct(piece_clicked_pos_initial, event.pos, piece_clicked.type, echiquier)
                 if pos_final_correct:
                     piece_clicked.position = pos_final_correct
                 else:
