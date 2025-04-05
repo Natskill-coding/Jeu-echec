@@ -1,5 +1,7 @@
 import pygame
-from fonctions import *
+from fonctions.initalisation import *
+from fonctions.is_mouvement_correct import *
+from fonctions.initalisation import *
 
 
 SCREEN_WIDTH = 800
@@ -14,7 +16,15 @@ clock = pygame.time.Clock()
 BG_IMAGE = pygame.transform.scale(pygame.image.load("./ressources/echiquier.png").convert(), (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 
-echiquier = create_pieces()
+list_pieces = create_pieces()
+
+
+def detect_click_on_piece(list_pieces, mouse_pos):
+    for piece in list_pieces:
+        x_intervalle = (piece.position[0], piece.position[0] + 100)
+        y_intervalle = (piece.position[1], piece.position[1] + 100)
+        if (x_intervalle[0] <= mouse_pos[0] <= x_intervalle[1]) and (y_intervalle[0] <= mouse_pos[1] <= y_intervalle[1]):
+            return piece
 
 
 is_running = True
@@ -31,7 +41,7 @@ while is_running:
             is_running = False
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            piece_clicked = detect_click_on_piece(echiquier, event.pos)
+            piece_clicked = detect_click_on_piece(list_pieces, event.pos)
             if piece_clicked:
                 piece_clicked_pos_initial = piece_clicked.position
                 offset_x =  event.pos[0] - piece_clicked.position[0]
@@ -43,7 +53,17 @@ while is_running:
 
         elif event.type == pygame.MOUSEBUTTONUP:
             if piece_clicked:
-                pos_final_correct = is_mouvement_correct(piece_clicked_pos_initial, event.pos, piece_clicked.type, echiquier)
+                if piece_clicked.type == "tour":
+                    pos_final_correct = tour_is_mouvement_correct(list_pieces, piece_clicked_pos_initial, event.pos)
+                elif piece_clicked.type == "cavalier":
+                    pos_final_correct = cavalier_is_mouvement_correct(piece_clicked_pos_initial, event.pos)
+                elif piece_clicked.type == "fou":
+                    pos_final_correct = fou_is_mouvement_correct(list_pieces, piece_clicked_pos_initial, event.pos)
+                elif piece_clicked.type == "dame":
+                    pos_final_correct = dame_is_mouvement_correct(piece_clicked_pos_initial, event.pos)
+                elif piece_clicked.type == "roi":
+                    pos_final_correct = roi_is_mouvement_correct(piece_clicked_pos_initial, event.pos)
+
                 if pos_final_correct:
                     piece_clicked.position = pos_final_correct
                 else:
@@ -52,9 +72,8 @@ while is_running:
 
 
     screen.blit(BG_IMAGE, (0, 0))
-    for y, row in enumerate(echiquier):
-        for x, piece in enumerate(row):
-            screen.blit(piece.image, piece.position)
+    for piece in list_pieces:
+        screen.blit(piece.image, piece.position)
 
 
     pygame.display.flip()
