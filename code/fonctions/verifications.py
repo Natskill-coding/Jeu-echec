@@ -1,6 +1,6 @@
 import math
 from .plus_proches import *
-from .is_collision import *
+
 
 
 def tour_is_mouvement_correct(list_pieces, pos_initial, pos_final):
@@ -156,3 +156,17 @@ def roi_is_mouvement_correct(pos_initial, pos_final):
     dy = abs(pos_final_tab_rounded[1] - pos_initial_tab[1])
     if dx <= 1 and dy <= 1:
         return (pos_final_tab_rounded[0] * 100, pos_final_tab_rounded[1] * 100)
+    
+
+
+
+def is_collision(list_pieces, pos_initial, pos_final):
+    for piece in list_pieces:
+        if piece.position == pos_final and pos_initial != piece.position:
+            return piece
+        
+def a_qui_de_jouer(white_black):
+    if white_black % 2 == 0:
+        return "noir"
+    elif white_black % 2 != 0:
+        return "blanc"
