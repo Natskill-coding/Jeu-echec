@@ -2,6 +2,7 @@ import pygame
 from fonctions.initalisation import *
 from fonctions.is_mouvement_correct import *
 from fonctions.initalisation import *
+from fonctions.is_collision import *
 
 
 SCREEN_WIDTH = 800
@@ -28,7 +29,6 @@ def detect_click_on_piece(list_pieces, mouse_pos):
 
 
 is_running = True
-# white_black = 1
 piece_clicked = None
 piece_clicked_pos_initial = None
 offset_x = 0
@@ -60,11 +60,14 @@ while is_running:
                 elif piece_clicked.type == "fou":
                     pos_final_correct = fou_is_mouvement_correct(list_pieces, piece_clicked_pos_initial, event.pos)
                 elif piece_clicked.type == "dame":
-                    pos_final_correct = dame_is_mouvement_correct(piece_clicked_pos_initial, event.pos)
+                    pos_final_correct = dame_is_mouvement_correct(list_pieces, piece_clicked_pos_initial, event.pos)
                 elif piece_clicked.type == "roi":
                     pos_final_correct = roi_is_mouvement_correct(piece_clicked_pos_initial, event.pos)
 
                 if pos_final_correct:
+                    piece_collision = is_collision(list_pieces, piece_clicked_pos_initial, pos_final_correct)
+                    if piece_collision:
+                        list_pieces.remove(piece_collision)
                     piece_clicked.position = pos_final_correct
                 else:
                     piece_clicked.position = piece_clicked_pos_initial
