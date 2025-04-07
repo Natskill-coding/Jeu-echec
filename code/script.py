@@ -1,7 +1,6 @@
 import pygame
 from fonctions.initalisation import *
 from fonctions.verifications import *
-from fonctions.initalisation import *
 
 
 SCREEN_WIDTH = 800
@@ -70,13 +69,19 @@ while is_running:
                             pos_final_correct = dame_is_mouvement_correct(list_pieces, piece_clicked_pos_initial, event.pos)
                         elif piece_clicked.type == "roi":
                             pos_final_correct = roi_is_mouvement_correct(piece_clicked_pos_initial, event.pos)
+                        elif piece_clicked.type == "pion":
+                            pos_final_correct = pion_is_mouvement_correct(list_pieces, piece_clicked, piece_clicked_pos_initial, event.pos)
 
                         if pos_final_correct:
-                            piece_collision = is_collision(list_pieces, piece_clicked_pos_initial, pos_final_correct)
+                            piece_collision = is_collision(list_pieces, piece_clicked, piece_clicked_pos_initial, pos_final_correct)
                             if piece_collision:
-                                list_pieces.remove(piece_collision)
+                                if piece_collision[0].color != piece_clicked.color:
+                                    list_pieces.remove(piece_collision[0])
+                                else:
+                                    pos_final_correct = piece_collision[1]
                             piece_clicked.position = pos_final_correct
-                            white_black += 1
+                            if piece_clicked_pos_initial != pos_final_correct:
+                                white_black += 1
                         else:
                             piece_clicked.position = piece_clicked_pos_initial
                     else:
